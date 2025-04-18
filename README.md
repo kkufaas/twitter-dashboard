@@ -73,7 +73,7 @@ Includes 3 services:
 
 ---
 
-**🎓 What I Learned**
+**What I Learned**
 - How to model real-world semi-structured data in MongoDB
 - Use MongoDB aggregations for analysis
 - Build and expose Spring Boot REST APIs
@@ -103,7 +103,5 @@ Visit:
 - `http://localhost/api/stats/activity` → API JSON
 ```
 
----
 
-**Thank you!**
 
