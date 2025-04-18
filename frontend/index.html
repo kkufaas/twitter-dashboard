@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Twitter Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 2rem; }
+        canvas { max-width: 100%; margin-bottom: 50px; }
+    </style>
+</head>
+<body>
+<h1>📊 Twitter Activity Dashboard</h1>
+
+<h2>🕒 Tweets per Day</h2>
+<canvas id="activityChart" width="800" height="300"></canvas>
+
+<h2>⭐ Top Users by Likes</h2>
+<canvas id="topUsersChart" width="800" height="300"></canvas>
+
+<script>
+    async function loadCharts() {
+        const activityRes = await fetch("/api/stats/activity");
+        const topUsersRes = await fetch("/api/stats/top-users");
+
+        const activityData = await activityRes.json();
+        const topUsersData = await topUsersRes.json();
+
+        // ACTIVITY CHART
+        const dates = activityData.map(item => item._id);
+        const counts = activityData.map(item => item.count);
+
+        new Chart(document.getElementById("activityChart"), {
+            type: "line",
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: "Tweets per day",
+                    data: counts,
+                    borderColor: "blue",
+                    backgroundColor: "rgba(0,0,255,0.1)",
+                    tension: 0.2,
+                    fill: true
+                }]
+            }
+        });
+
+        // TOP USERS CHART
+        const usernames = topUsersData.map(user => user._id);
+        const likes = topUsersData.map(user => user.totalLikes);
+
+        new Chart(document.getElementById("topUsersChart"), {
+            type: "bar",
+            data: {
+                labels: usernames,
+                datasets: [{
+                    label: "Total Likes",
+                    data: likes,
+                    backgroundColor: "orange"
+                }]
+            }
+        });
+    }
+
+    loadCharts();
+</script>
+</body>
+</html>
