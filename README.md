@@ -11,6 +11,7 @@ I built a fullstack application using:
 - Chart.js + HTML (Frontend visualizations)
 - NGINX (Reverse proxy)
 - Docker Compose (to tie everything together)
+- 	Python (for CSV data loading into MongoDB)
 
 ---
 
@@ -54,6 +55,24 @@ No separate collections were needed for users or likes in this case, because twe
 - `/api/stats/test-one` → JSON test of one tweet
 
 ---
+
+**Data loading**
+I used a standalone Python script to load the dataset (CSV) into MongoDB. The script can be copied into the MongoDB container and run after the CSV is loaded to /tmp.
+
+import pandas as pd
+from pymongo import MongoClient
+
+df = pd.read_csv("/tmp/twitter_dataset.csv")
+df['Timestamp'] = pd.to_datetime(df['Timestamp'], errors='coerce')
+df = df.dropna(subset=['Timestamp'])
+
+client = MongoClient("mongodb://localhost:27017")
+db = client["twitter"]
+collection = db["tweets"]
+
+collection.delete_many({})
+collection.insert_many(df.to_dict(orient='records'))
+print(f"Inserted {len(df)} tweets into MongoDB.")
 
 **Frontend Preview**
 Using Chart.js with fetch() and dynamic rendering.
