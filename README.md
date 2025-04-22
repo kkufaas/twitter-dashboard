@@ -54,11 +54,12 @@ No separate collections were needed for users or likes in this case, because twe
 - `/api/stats/top-users` → Most liked users
 - `/api/stats/test-one` → JSON test of one tweet
 
----
-
 **Data loading**
+
 I used a standalone Python script to load the dataset (CSV) into MongoDB. The script can be copied into the MongoDB container and run after the CSV is loaded to /tmp.
 
+
+```python
 import pandas as pd
 from pymongo import MongoClient
 
@@ -73,7 +74,9 @@ collection = db["tweets"]
 collection.delete_many({})
 collection.insert_many(df.to_dict(orient='records'))
 print(f"Inserted {len(df)} tweets into MongoDB.")
+```
 
+---
 **Frontend Preview**
 Using Chart.js with fetch() and dynamic rendering.
 - Tweets per day → Line chart
